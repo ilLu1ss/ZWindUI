@@ -25870,41 +25870,37 @@ local b=a.j()
 local d=b.New
 local e=b.Tween
 
-
 local f={
-info={main=Color3.fromRGB(52,152,219),text=Color3.new(1,1,1)},
-success={main=Color3.fromRGB(46,204,113),text=Color3.new(1,1,1)},
-warning={main=Color3.fromRGB(241,196,15),text=Color3.new(1,1,1)},
-error={main=Color3.fromRGB(231,76,60),text=Color3.new(1,1,1)},
-default={main=Color3.fromRGB(52,73,94),text=Color3.new(1,1,1)},
-}
-
-local g={
 Size=UDim2.new(0,300,1,-156),
 SizeLower=UDim2.new(0,300,1,-56),
 UICorner=18,
 UIPadding=14,
+
 Holder=nil,
 NotificationIndex=0,
 Notifications={},
 }
 
-function g.Init(h)
-local i={
+function f.Init(g)
+local h={
 Lower=false,
 }
 
-function i.SetLower(l)
-i.Lower=l
-i.Frame.Size=l and g.SizeLower or g.Size
+function h.SetLower(i)
+h.Lower=i
+h.Frame.Size=i and f.SizeLower or f.Size
 end
 
-i.Frame=d("Frame",{
+h.Frame=d("Frame",{
 Position=UDim2.new(1,-29,0,56),
 AnchorPoint=Vector2.new(1,0),
-Size=g.Size,
-Parent=h,
+Size=f.Size,
+Parent=g,
 BackgroundTransparency=1,
+
+
+
+
 },{
 d("UIListLayout",{
 HorizontalAlignment="Center",
@@ -25916,75 +25912,77 @@ d("UIPadding",{
 PaddingBottom=UDim.new(0,29),
 }),
 })
-return i
+return h
 end
 
-function g.New(h)
+function f.New(g)
 
-local i=h.Type or"default"
-local l=h.Color
-local m=h.TextColor
+local h={
+success={color=Color3.fromRGB(0,200,100),icon="check"},
+error={color=Color3.fromRGB(255,70,70),icon="x"},
+warning={color=Color3.fromRGB(255,200,0),icon="alert"},
+info={color=Color3.fromRGB(70,150,255),icon="info"},
+}
 
 
-local p,r
+if g.Type and h[g.Type]then
+local i=h[g.Type]
+if not g.Color then
+g.Color=i.color
+end
+
+if not g.Icon and i.icon then
+
+local l=pcall(function()
+return b.Icon(i.icon)
+end)
 if l then
-p=l
-
-r=m or(function(u)
-local v,x,z=u.R,u.G,u.B
-local A=0.2126*v+0.7152*x+0.0722*z
-return A>0.5 and Color3.new(0,0,0)or Color3.new(1,1,1)
-end)(l)
-else
-local u=f[i]or f.default
-p=u.main
-r=u.text
-
-if m then
-r=m
+g.Icon=i.icon
+end
 end
 end
 
-local u={
-Title=h.Title or"Notification",
-Content=h.Content or nil,
-Icon=h.Icon or nil,
-IconThemed=h.IconThemed,
-Background=h.Background,
-BackgroundImageTransparency=h.BackgroundImageTransparency,
-Duration=h.Duration or 5,
-Buttons=h.Buttons or{},
-CanClose=h.CanClose~=false,
+local i={
+Title=g.Title or"Notification",
+Content=g.Content or nil,
+Icon=g.Icon or nil,
+IconThemed=g.IconThemed,
+Background=g.Background,
+BackgroundImageTransparency=g.BackgroundImageTransparency,
+Duration=g.Duration or 5,
+Buttons=g.Buttons or{},
+CanClose=g.CanClose~=false,
 UIElements={},
 Closed=false,
 }
 
-g.NotificationIndex=g.NotificationIndex+1
-g.Notifications[g.NotificationIndex]=u
+f.NotificationIndex=f.NotificationIndex+1
+f.Notifications[f.NotificationIndex]=i
 
-local v
-if u.Icon then
-v=b.Image(
-u.Icon,
-u.Title..":"..u.Icon,
+local l
+
+if i.Icon then
+l=b.Image(
+i.Icon,
+i.Title..":"..i.Icon,
 0,
-h.Window,
+g.Window,
 "Notification",
-u.IconThemed
+i.IconThemed
 )
-v.Size=UDim2.new(0,26,0,26)
-v.Position=UDim2.new(0,g.UIPadding,0,g.UIPadding)
+l.Size=UDim2.new(0,26,0,26)
+l.Position=UDim2.new(0,f.UIPadding,0,f.UIPadding)
 end
 
-local x
-if u.CanClose then
-x=d("ImageButton",{
+local m
+if i.CanClose then
+m=d("ImageButton",{
 Image=b.Icon"x"[1],
 ImageRectSize=b.Icon"x"[2].ImageRectSize,
 ImageRectOffset=b.Icon"x"[2].ImageRectPosition,
 BackgroundTransparency=1,
 Size=UDim2.new(0,16,0,16),
-Position=UDim2.new(1,-g.UIPadding,0,g.UIPadding),
+Position=UDim2.new(1,-f.UIPadding,0,f.UIPadding),
 AnchorPoint=Vector2.new(1,0),
 ThemeTag={
 ImageColor3="Text",
@@ -26001,30 +25999,31 @@ Text="",
 })
 end
 
-local z=b.NewRoundFrame(g.UICorner,"Squircle",{
+local p=b.NewRoundFrame(f.UICorner,"Squircle",{
 Size=UDim2.new(0,0,1,0),
 ThemeTag={
 ImageTransparency="NotificationDurationTransparency",
 ImageColor3="NotificationDuration",
 },
+
 })
 
-local A=d("Frame",{
-Size=UDim2.new(1,u.Icon and-28-g.UIPadding or 0,1,0),
+local r=d("Frame",{
+Size=UDim2.new(1,i.Icon and-28-f.UIPadding or 0,1,0),
 Position=UDim2.new(1,0,0,0),
 AnchorPoint=Vector2.new(1,0),
 BackgroundTransparency=1,
 AutomaticSize="Y",
 },{
 d("UIPadding",{
-PaddingTop=UDim.new(0,g.UIPadding),
-PaddingLeft=UDim.new(0,g.UIPadding),
-PaddingRight=UDim.new(0,g.UIPadding),
-PaddingBottom=UDim.new(0,g.UIPadding),
+PaddingTop=UDim.new(0,f.UIPadding),
+PaddingLeft=UDim.new(0,f.UIPadding),
+PaddingRight=UDim.new(0,f.UIPadding),
+PaddingBottom=UDim.new(0,f.UIPadding),
 }),
 d("TextLabel",{
 AutomaticSize="Y",
-Size=UDim2.new(1,-30-g.UIPadding,0,0),
+Size=UDim2.new(1,-30-f.UIPadding,0,0),
 TextWrapped=true,
 TextXAlignment="Left",
 RichText=true,
@@ -26034,15 +26033,15 @@ ThemeTag={
 TextColor3="NotificationTitle",
 TextTransparency="NotificationTitleTransparency",
 },
-Text=u.Title,
+Text=i.Title,
 FontFace=Font.new(b.Font,Enum.FontWeight.SemiBold),
 }),
 d("UIListLayout",{
-Padding=UDim.new(0,g.UIPadding/3),
+Padding=UDim.new(0,f.UIPadding/3),
 }),
 })
 
-if u.Content then
+if i.Content then
 d("TextLabel",{
 AutomaticSize="Y",
 Size=UDim2.new(1,0,0,0),
@@ -26055,13 +26054,13 @@ ThemeTag={
 TextColor3="NotificationContent",
 TextTransparency="NotificationContentTransparency",
 },
-Text=u.Content,
+Text=i.Content,
 FontFace=Font.new(b.Font,Enum.FontWeight.Medium),
-Parent=A,
+Parent=r,
 })
 end
 
-local B=b.NewRoundFrame(g.UICorner,"Squircle",{
+local u=b.NewRoundFrame(f.UICorner,"Squircle",{
 Size=UDim2.new(1,0,0,0),
 Position=UDim2.new(2,0,1,0),
 AnchorPoint=Vector2.new(0,1),
@@ -26071,7 +26070,7 @@ ThemeTag={
 ImageColor3="Notification",
 },
 },{
-b.NewRoundFrame(g.UICorner,"Squircle",{
+b.NewRoundFrame(f.UICorner,"Squircle",{
 Size=UDim2.new(1,0,1,0),
 ThemeTag={
 ImageColor3="Notification2",
@@ -26088,119 +26087,91 @@ Size=UDim2.new(1,0,1,0),
 BackgroundTransparency=1,
 ClipsDescendants=true,
 },{
-z,
+p,
 }),
 }),
 d("ImageLabel",{
 Name="Background",
-Image=u.Background,
+Image=i.Background,
 BackgroundTransparency=1,
 Size=UDim2.new(1,0,1,0),
 ScaleType="Crop",
-ImageTransparency=u.BackgroundImageTransparency,
+ImageTransparency=i.BackgroundImageTransparency,
 },{
 d("UICorner",{
-CornerRadius=UDim.new(0,g.UICorner),
+CornerRadius=UDim.new(0,f.UICorner),
 }),
 }),
-A,
-v,
-x,
+
+r,
+l,
+m,
 })
 
 
-if p or r then
-
-if p then
-B.ImageColor3=p
-
-local C=B:FindFirstChildWhichIsA"ImageLabel"
-if C then
-
-local F=p*0.8
-C.ImageColor3=F
-C.ImageTransparency=0.2
-end
+if g.Color then
+u.ImageColor3=g.Color
+p.ImageColor3=g.Color
 end
 
-
-if r then
-for C,F in ipairs(A:GetChildren())do
-if F:IsA"TextLabel"then
-F.TextColor3=r
-F.ThemeTag=nil
-end
-end
-
-if v then
-v.ImageColor3=r
-v.ThemeTag=nil
-end
-if x then
-x.ImageColor3=r
-x.ThemeTag=nil
-end
-end
-end
-
-local C=d("Frame",{
+local v=d("Frame",{
 BackgroundTransparency=1,
 Size=UDim2.new(1,0,0,0),
-Parent=h.Holder,
+Parent=g.Holder,
 },{
-B,
+u,
 })
 
-function u.Close(F)
-if not u.Closed then
-u.Closed=true
+function i.Close(x)
+if not i.Closed then
+i.Closed=true
 e(
-C,
+v,
 0.45,
 {Size=UDim2.new(1,0,0,-8)},
 Enum.EasingStyle.Quint,
 Enum.EasingDirection.Out
 ):Play()
-e(B,0.55,{Position=UDim2.new(2,0,1,0)},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+e(u,0.55,{Position=UDim2.new(2,0,1,0)},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 task.wait(0.45)
-C:Destroy()
+v:Destroy()
 end
 end
 
 task.spawn(function()
 task.wait()
 e(
-C,
+v,
 0.45,
-{Size=UDim2.new(1,0,0,B.AbsoluteSize.Y)},
+{Size=UDim2.new(1,0,0,u.AbsoluteSize.Y)},
 Enum.EasingStyle.Quint,
 Enum.EasingDirection.Out
 ):Play()
-e(B,0.45,{Position=UDim2.new(0,0,1,0)},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
-if u.Duration then
-z.Size=UDim2.new(0,B.DurationFrame.AbsoluteSize.X,1,0)
+e(u,0.45,{Position=UDim2.new(0,0,1,0)},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+if i.Duration then
+p.Size=UDim2.new(0,u.DurationFrame.AbsoluteSize.X,1,0)
 e(
-B.DurationFrame.Frame,
-u.Duration,
+u.DurationFrame.Frame,
+i.Duration,
 {Size=UDim2.new(0,0,1,0)},
 Enum.EasingStyle.Linear,
 Enum.EasingDirection.InOut
 ):Play()
-task.wait(u.Duration)
-u:Close()
+task.wait(i.Duration)
+i:Close()
 end
 end)
 
-if x then
-b.AddSignal(x.TextButton.MouseButton1Click,function()
-u:Close()
+if m then
+b.AddSignal(m.TextButton.MouseButton1Click,function()
+i:Close()
 end)
 end
 
-return u
+return i
 end
 
-return g end function a.l():typeof(__modImpl())local b=a.cache.l if not b then b={c=__modImpl()}a.cache.l=b end return b.c end end do local function __modImpl()
+return f end function a.l():typeof(__modImpl())local b=a.cache.l if not b then b={c=__modImpl()}a.cache.l=b end return b.c end end do local function __modImpl()
 
 
 
